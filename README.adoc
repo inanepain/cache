@@ -1,0 +1,19 @@
+= Cache
+:author: Philip Michael Raab
+:email: <peep@inane.co.za>
+:revnumber: 0.1.0
+:revdate: 2022-08-21
+:experimental:
+:source-highlighter: highlight.js
+:icons: font
+:toc: auto
+
+Some simple caching tools implementing link:https://www.php-fig.org/psr/psr-6[`PSR-6`] and link:https://www.php-fig.org/psr/psr-16[`PSR-16`].
+
+== Goals
+
+There is a lot to cover here so best I keep a bit of a record so as not to let bits fall between the cracks. As a bonus, a record will help keep me focus on the goal as well as track progress.
+
+=== Primary Goal
+
+To reduce remote access when using internet sourced data.

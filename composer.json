@@ -1,0 +1,42 @@
+{
+    "name": "inanepain/cache",
+    "description": "Some simple caching tools implementing PSR-6 and PSR-16.",
+    "type": "library",
+    "license": "UNLICENSE",
+    "homepage": "http://vaieen.local:3000/inane/cache",
+    "readme": "README.md",
+    "authors": [
+        {
+            "name": "Philip Michael Raab",
+            "email": "peep@inane.co.za",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "peep@inane.co.za",
+        "issues": "http://vaieen.local:3000/iane"
+    },
+    "keywords": [
+        "inane",
+        "cache"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Inane\\Cache\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "discard-changes": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.1",
+        "psr/cache": ">= 3",
+        "psr/simple-cache": ">= 3",
+        "inanepain/file": ">= 0.1.0"
+    },
+    "require-dev": {}
+}

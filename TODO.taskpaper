@@ -1,0 +1,19 @@
+Inane\Cache:
+	Simple caching item and pools.
+	- basic implementation @version(0.1.0)
+	Item:
+		The Cache item class is used by all pools but the instances themselves are pool specific.
+		- implement inital basic item @version(0.1.0)
+	Pool:
+		Pools are collections for a specific storage mechanism.
+		- implement basic abstract pool @version(0.1.0)
+			initially just an empty class is pobably best.
+			Array:
+				The ArrayPool uses the Options object to story its cache
+				- implement basic array pool @version(0.1.0)
+			File:
+				The FilePool uses a location on the disk for storing cached items.
+				- implement basic file pool @version
+			Redis:
+				The RedisPool stores items in Redis.
+				- implement basic redis pool @version
