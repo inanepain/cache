@@ -9,6 +9,7 @@
  *
  * @author Philip Michael Raab<peep@inane.co.za>
  * @package Inane\Cache
+ * @category cache
  *
  * @license UNLICENSE
  * @license https://github.com/inanepain/cache/raw/develop/UNLICENSE UNLICENSE
@@ -25,6 +26,7 @@ use DateInterval;
 use Inane\File\File;
 use Inane\Stdlib\Options;
 use Psr\SimpleCache\CacheInterface;
+use WeakReference;
 
 use function array_filter;
 use function array_map;
@@ -37,13 +39,22 @@ use const null;
 use const true;
 
 /**
- * Simple File Cache
+ * Remote File Cache
+ *
+ * Caches remote files after retrieving them.
  *
  * @package Inane\Cache
  *
  * @version 0.1.0
  */
-class SimpleFileCache implements CacheInterface {
+class RemoteFileCache implements CacheInterface {
+    /**
+     * Weak Instance Reference
+     *
+     * @var \WeakReference
+     */
+    private WeakReference $instance;
+
     /**
      * Purge when cache size reaches limit
      *
@@ -54,10 +65,18 @@ class SimpleFileCache implements CacheInterface {
      */
     private int $maxCacheSize = 4;
 
+    /**
+     * Cache Items
+     *
+     * @var \Inane\Stdlib\Options
+     */
     private Options $cacheItems;
 
+    // CONSTRUCTOR
+    // =========++
+
     /**
-     * Simple File Cache Constructor
+     * Remote File Cache Constructor
      *
      * @param string $cachePath cache location
      * @param int $defaultTTL duration items may remain in cache
@@ -82,8 +101,12 @@ class SimpleFileCache implements CacheInterface {
          */
         private int $defaultTTL = 86400,
     ) {
+        $this->instance = WeakReference::create($this);
         $this->cacheItems = new Options();
     }
+
+    // PROTECTED
+    // =========
 
     /**
      * Returns the cache
@@ -120,11 +143,19 @@ class SimpleFileCache implements CacheInterface {
     protected function getCacheItem(string $url): File {
         if (!$this->cacheItems->has($url)) {
             $uid = md5($url);
-            $this->cacheItems->set($url, new File($this->cachePath . DIRECTORY_SEPARATOR . $uid . '.cache'));
+            $cacheItem = [
+                'file' => new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"),
+                'ttl' => $this->defaultTTL,
+                'cache' => $this->instance,
+            ];
+            $this->cacheItems->set($url, new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"));
         }
 
         return $this->cacheItems->get($url);
     }
+
+    // PUBLIC
+    // ======
 
     /**
      * Fetches a value from the cache.
@@ -183,7 +214,7 @@ class SimpleFileCache implements CacheInterface {
 
         $this->cacheItems->unset($key);
 
-        if ($fi->isValid()) if ($fi->unlink())
+        if ($fi->isValid()) if ($fi->remove())
             return true;
 
         return false;
