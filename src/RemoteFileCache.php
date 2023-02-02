@@ -23,20 +23,24 @@ declare(strict_types=1);
 namespace Inane\Cache;
 
 use DateInterval;
-use Inane\File\File;
 use Inane\Stdlib\Options;
 use Psr\SimpleCache\CacheInterface;
 use WeakReference;
 
 use function array_filter;
-use function array_map;
 use function count;
 use function md5;
+use function str_ends_with;
+use function substr;
 use function time;
-use const DIRECTORY_SEPARATOR;
 use const false;
 use const null;
 use const true;
+
+use Inane\File\{
+    File,
+    Path
+};
 
 /**
  * Remote File Cache
@@ -45,7 +49,7 @@ use const true;
  *
  * @package Inane\Cache
  *
- * @version 0.1.0
+ * @version 0.2.0
  */
 class RemoteFileCache implements CacheInterface {
     /**
@@ -72,22 +76,29 @@ class RemoteFileCache implements CacheInterface {
      */
     private Options $cacheItems;
 
+    /**
+     * Cache Path
+     *
+     * @var \Inane\File\Path
+     */
+    private Path $path;
+
     // CONSTRUCTOR
     // =========++
 
     /**
      * Remote File Cache Constructor
      *
-     * @param string $cachePath cache location
-     * @param int $defaultTTL duration items may remain in cache
+     * @param string $cachePath cache location (data/cache)
+     * @param int $defaultTTL duration items may remain in cache (86400, 1 day)
      *
      * @return void
      */
     public function __construct(
         /**
-         * Cache Location
+         * Cache Location (data/cache)
          *
-         * @var string
+         * @var string cache location
          */
         private string $cachePath = 'data/cache',
 
@@ -103,6 +114,13 @@ class RemoteFileCache implements CacheInterface {
     ) {
         $this->instance = WeakReference::create($this);
         $this->cacheItems = new Options();
+        $this->path = new Path($cachePath);
+
+        if (str_ends_with($cachePath, '/') || str_ends_with($cachePath, '\\'))
+            $cachePath = substr($cachePath, 0, -1);
+
+        // $cp = explode('\\', $cachePath);
+        // $this->cachePath = implode(DIRECTORY_SEPARATOR, $cp);
     }
 
     // PROTECTED
@@ -114,7 +132,8 @@ class RemoteFileCache implements CacheInterface {
      * @return \Inane\File\File[]
      */
     protected function cache(): array {
-        return array_map(fn($f): File => new File($f), glob($this->cachePath . DIRECTORY_SEPARATOR . "*.cache"));
+        return $this->path->getFiles('*.cache');
+        // return array_map(fn($f): File => new File($f), glob($this->cachePath . DIRECTORY_SEPARATOR . "*.cache"));
     }
 
     /**
@@ -144,11 +163,12 @@ class RemoteFileCache implements CacheInterface {
         if (!$this->cacheItems->has($url)) {
             $uid = md5($url);
             $cacheItem = [
-                'file' => new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"),
+                // 'file' => new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"),
+                'file' => $this->path->getFile("{$uid}.cache"),
                 'ttl' => $this->defaultTTL,
                 'cache' => $this->instance,
             ];
-            $this->cacheItems->set($url, new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"));
+            $this->cacheItems->set($url, $cacheItem['file']);
         }
 
         return $this->cacheItems->get($url);
@@ -173,7 +193,7 @@ class RemoteFileCache implements CacheInterface {
         if (!$fi->isValid() || ($fi->isValid() && (($fi->getMTime() + $this->defaultTTL) < time()) || $fi->getSize() < 10))
             $this->set($key, file_get_contents($key));
 
-        return $fi->read();
+        return $fi->read(true);
     }
 
     /**
