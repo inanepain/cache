@@ -4,7 +4,7 @@
 
 ## History
 
-### 0.2.0-dev (2023 Feb 02)
+### 0.2.0 (2023 Feb 02)
 
  - new: `RemoteFileCache` use `\Inane\File\Path` for cache location
 
