@@ -3,7 +3,7 @@ Inane\Cache:
 	- basic implementation @version(0.1.0)
 	Item:
 		The Cache item class is used by all pools but the instances themselves are pool specific.
-		- implement inital basic item @version(0.1.0)
+		- implement initial basic item @version(0.1.0)
 	Pool:
 		Pools are collections for a specific storage mechanism.
 		- implement basic abstract pool @version(0.1.0)
