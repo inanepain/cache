@@ -29,7 +29,10 @@ use WeakReference;
 
 use function array_filter;
 use function count;
+use function explode;
+use function is_null;
 use function md5;
+use function preg_match;
 use function str_ends_with;
 use function substr;
 use function time;
@@ -49,7 +52,7 @@ use Inane\File\{
  *
  * @package Inane\Cache
  *
- * @version 0.2.0
+ * @version 0.3.0
  */
 class RemoteFileCache implements CacheInterface {
     /**
@@ -62,12 +65,11 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Purge when cache size reaches limit
      *
-     * If cache size >= $purgeTriggerLimit after added cache content
-     *  a purge is triggered.
+     * If cache size >= $purgeTriggerLimit if after adding a file to cache, its size is equal to or grater than this limit a purge is triggered automatically.
      *
      * @var int
      */
-    private int $maxCacheSize = 4;
+    private int $maxCacheSize = 10;
 
     /**
      * Cache Items
@@ -123,8 +125,43 @@ class RemoteFileCache implements CacheInterface {
         // $this->cachePath = implode(DIRECTORY_SEPARATOR, $cp);
     }
 
+	/**
+	 * Get cache key for supplied url
+	 * 
+	 * @since 0.3.0
+	 * 
+	 * @param string $url source file
+	 * 
+	 * @return string cache key
+	 */
+	private static function parseId(string $url): string {
+		if(preg_match('/[0-9a-f]{32}/i', $url)) return $url;
+
+	    return md5($url);
+	}
+
     // PROTECTED
     // =========
+
+    /**
+     * Read filesystem cache files into class cache container
+	 * 
+	 * @since 0.3.0
+     *
+     * @return void
+     */
+    protected function loadCache(): void {
+		foreach($this->cache() as $file) {
+			$meta = explode('-', $file->getBasename('.cache'));
+			if (count($meta) == 1) $meta[] = $this->defaultTTL;
+			[$uid, $ttl] = $meta;
+			$this->cacheItems->set($uid, [
+				'file' => $file,
+                'ttl' => $ttl,
+                'cache' => $this->instance,
+			]);
+		}
+    }
 
     /**
      * Returns the cache
@@ -153,25 +190,27 @@ class RemoteFileCache implements CacheInterface {
     }
 
     /**
-     * parseKey
-     *
-     * @param string $url file url
-     *
-     * @return \Inane\File\File
-     */
-    protected function getCacheItem(string $url): File {
-        if (!$this->cacheItems->has($url)) {
-            $uid = md5($url);
-            $cacheItem = [
-                // 'file' => new File($this->cachePath . DIRECTORY_SEPARATOR . "{$uid}.cache"),
-                'file' => $this->path->getFile("{$uid}.cache"),
-                'ttl' => $this->defaultTTL,
+	 * Get or Add item to or from cache
+	 * 
+	 * @param string $url	cache key
+	 * @param null|int $ttl	time to live for cache item if not default
+	 * 
+	 * @return array|\Inane\Stdlib\Options cache item
+	 * 
+	 * @throws \Inane\Stdlib\Exception\RuntimeException 
+	 */
+    protected function getCacheItem(string $url, ?int $ttl = null): array|Options {
+        $uid = static::parseId($url);
+        if (!$this->cacheItems->has($uid)) {
+			if (is_null($ttl)) $ttl = $this->defaultTTL;
+            $this->cacheItems->set($uid, [
+                'file' => $this->path->getFile("{$uid}-{$ttl}.cache"),
+                'ttl' => $ttl,
                 'cache' => $this->instance,
-            ];
-            $this->cacheItems->set($url, $cacheItem['file']);
+            ]);
         }
 
-        return $this->cacheItems->get($url);
+        return $this->cacheItems->get($uid);
     }
 
     // PUBLIC
@@ -188,9 +227,9 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function get(string $key, mixed $default = null): mixed {
-        $fi = $this->getCacheItem($key);
+        [$fi, $ttl, $cache] = $this->getCacheItem($key);
 
-        if (!$fi->isValid() || ($fi->isValid() && (($fi->getMTime() + $this->defaultTTL) < time()) || $fi->getSize() < 10))
+        if (!$fi->isValid() || ($fi->isValid() && (($fi->getMTime() + $ttl) < time()) || $fi->getSize() < 10))
             $this->set($key, file_get_contents($key));
 
         return $fi->read(true);
@@ -210,7 +249,7 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool {
-        $fi = $this->getCacheItem($key);
+        [$fi, $ttl, $cache] = $this->getCacheItem($key);
 
         if ($fi->write($value)) {
             if ($this->count() >= $this->maxCacheSize) $this->purge();
@@ -230,9 +269,9 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function delete(string $key): bool {
-        $fi = $this->getCacheItem($key);
+        [$fi, $ttl, $cache] = $this->getCacheItem($key);
 
-        $this->cacheItems->unset($key);
+        $this->cacheItems->unset(static::parseId($key));
 
         if ($fi->isValid()) if ($fi->remove())
             return true;
@@ -246,7 +285,7 @@ class RemoteFileCache implements CacheInterface {
      * @return bool True on success and false on failure.
      */
     public function clear(bool $expiredOnly = false): bool {
-        array_filter($this->cache(), fn($f): bool => (($f->getMTime() + $this->defaultTTL) < time()) ? $f->unlink() : false);
+        foreach($this->cacheItems as $uid => $ci) $this->delete($uid);
         return true;
     }
 
@@ -318,6 +357,6 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is neither a legal value.
      */
     public function has(string $key): bool {
-        return $this->getCacheItem($key)->isValid();
+        return $this->getCacheItem($key)->file->isValid();
     }
 }

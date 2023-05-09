@@ -4,7 +4,7 @@
     "type": "library",
     "license": "UNLICENSE",
     "homepage": "http://vaieen.local:3000/inane/cache",
-    "readme": "README.md",
+    "readme": "README.adoc",
     "authors": [
         {
             "name": "Philip Michael Raab",

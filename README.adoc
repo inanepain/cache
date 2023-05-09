@@ -17,3 +17,14 @@ There is a lot to cover here so best I keep a bit of a record so as not to let b
 === Primary Goal
 
 To reduce remote access when using internet sourced data.
+
+== Example
+
+Basic example creating a `RemoteFileCache` object and using it. Using the defaults any subsequent requests, within a  one day period for the same url, retrieves content from cache.
+
+.Basic RemoteFileCache Example
+[source,php]
+----
+$rfc = new \Inane\Cache\RemoteFileCache();
+$html = $rfc->get('http://example.com/files/example.html');
+----
