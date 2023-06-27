@@ -52,7 +52,7 @@ use Inane\File\{
  *
  * @package Inane\Cache
  *
- * @version 0.3.0
+ * @version 0.3.1
  */
 class RemoteFileCache implements CacheInterface {
     /**
@@ -204,7 +204,7 @@ class RemoteFileCache implements CacheInterface {
         if (!$this->cacheItems->has($uid)) {
 			if (is_null($ttl)) $ttl = $this->defaultTTL;
             $this->cacheItems->set($uid, [
-                'file' => $this->path->getFile("{$uid}-{$ttl}.cache"),
+                'file' => $this->path->getFile("$uid-$ttl.cache"),
                 'ttl' => $ttl,
                 'cache' => $this->instance,
             ]);
@@ -227,12 +227,12 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function get(string $key, mixed $default = null): mixed {
-        [$fi, $ttl, $cache] = $this->getCacheItem($key);
+        $ci = $this->getCacheItem($key);
 
-        if (!$fi->isValid() || ($fi->isValid() && (($fi->getMTime() + $ttl) < time()) || $fi->getSize() < 10))
+        if (!$ci->file->isValid() || ($ci->file->isValid() && (($ci->file->getMTime() + $ci->ttl) < time()) || $ci->file->getSize() < 10))
             $this->set($key, file_get_contents($key));
 
-        return $fi->read(true);
+        return $ci->file->read(true);
     }
 
     /**
@@ -249,9 +249,9 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool {
-        [$fi, $ttl, $cache] = $this->getCacheItem($key);
-
-        if ($fi->write($value)) {
+        $ci = $this->getCacheItem($key);
+		
+        if ($ci->file->write($value)) {
             if ($this->count() >= $this->maxCacheSize) $this->purge();
             return true;
         }
@@ -269,11 +269,11 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
     public function delete(string $key): bool {
-        [$fi, $ttl, $cache] = $this->getCacheItem($key);
+        $ci = $this->getCacheItem($key);
 
         $this->cacheItems->unset(static::parseId($key));
 
-        if ($fi->isValid()) if ($fi->remove())
+        if ($ci->file->isValid()) if ($ci->file->remove())
             return true;
 
         return false;

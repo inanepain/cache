@@ -3,7 +3,7 @@
     "description": "Some simple caching tools implementing PSR-6 and PSR-16.",
     "type": "library",
     "license": "UNLICENSE",
-    "homepage": "http://vaieen.local:3000/inane/cache",
+    "homepage": "https://vaieen.local:3000/inane/cache",
     "readme": "README.adoc",
     "authors": [
         {
@@ -14,7 +14,7 @@
     ],
     "support": {
         "email": "peep@inane.co.za",
-        "issues": "http://vaieen.local:3000/iane"
+        "issues": "https://vaieen.local:3000/inane/cache/issues"
     },
     "keywords": [
         "inane",
