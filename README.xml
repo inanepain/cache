@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?asciidoc-toc maxdepth="5"?>
+<?asciidoc-numbered maxdepth="5"?>
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xl="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
+<info>
+<title>Inanepain</title>
+<subtitle>Cache</subtitle>
+<date>2025-12-31</date>
+<copyright>
+<holder>Unlicense</holder>
+</copyright>
+<author>
+<personname>
+<firstname>Philip</firstname>
+<othername>Michael</othername>
+<surname>Raab</surname>
+</personname>
+<email>&lt;philip@cathedral.co.za&gt;</email>
+</author>
+<authorinitials>PMR</authorinitials>
+<revhistory>
+<revision>
+<revnumber>0.1.0</revnumber>
+<date>2025-12-31</date>
+<authorinitials>PMR</authorinitials>
+</revision>
+</revhistory>
+</info>
+<simpara>version: $Id$ ($Date$)</simpara>
+<simpara>Some simple caching tools implementing <link xl:href="https://www.php-fig.org/psr/psr-6"><literal>PSR-6</literal></link> and <link xl:href="https://www.php-fig.org/psr/psr-16"><literal>PSR-16</literal></link>.</simpara>
+<section xml:id="_goals">
+<title>Goals</title>
+<simpara>There is a lot to cover here so best I keep a bit of a record so as not to let bits fall between the cracks. As a bonus, a record will help keep me focused on the goal as well as track progress.<?asciidoc-br?>
+Man can I talk/type crap oir what?</simpara>
+<section xml:id="_primary_goal">
+<title>Primary Goal</title>
+<simpara>To reduce remote access when using internet or other non-local sourced data.</simpara>
+</section>
+</section>
+<section xml:id="_example">
+<title>Example</title>
+<simpara>Basic example, creating a <literal>RemoteFileCache</literal> object and using it to only return a file once. Using the defaults any subsequent requests, within a one day period for the same url, retrieves content from cache.</simpara>
+<formalpara>
+<title>Basic RemoteFileCache Example</title>
+<para>
+<programlisting language="php" linenumbering="unnumbered">$rfc = new \Inane\Cache\RemoteFileCache();
+$html = $rfc-&gt;get('http://example.com/files/example.html');</programlisting>
+</para>
+</formalpara>
+<simpara><emphasis>"No way!"</emphasis>, I hear you say. <emphasis>"That is so simple!"</emphasis><?asciidoc-br?>
+Yes, it is. But it is also very powerful.<?asciidoc-br?>
+The <literal>RemoteFileCache</literal> class implements the <literal>PSR-6</literal> and <literal>PSR-16</literal> interfaces so you can use it with any other library that implements those interfaces. It also has a few extra features that make it even more useful.</simpara>
+</section>
+</article>

@@ -3,11 +3,11 @@
 /**
  * Inane: Cache
  *
- * Inane Cache
+ * Some simple caching tools implementing PSR-6 and PSR-16.
  *
  * PHP version 8.1
  *
- * @author Philip Michael Raab<peep@inane.co.za>
+ * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package Inane\Cache
  * @category cache
  *
@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Inane\Cache;
 
-use DateInterval;
 use Inane\Stdlib\Options;
 use Psr\SimpleCache\CacheInterface;
 use WeakReference;
+use Inane\File\{
+    File,
+    Path
+};
 
 use function array_filter;
 use function count;
@@ -36,14 +39,8 @@ use function preg_match;
 use function str_ends_with;
 use function substr;
 use function time;
-use const false;
-use const null;
-use const true;
 
-use Inane\File\{
-    File,
-    Path
-};
+use const null;
 
 /**
  * Remote File Cache
@@ -127,11 +124,11 @@ class RemoteFileCache implements CacheInterface {
 
 	/**
 	 * Get cache key for supplied url
-	 * 
+	 *
 	 * @since 0.3.0
-	 * 
+	 *
 	 * @param string $url source file
-	 * 
+	 *
 	 * @return string cache key
 	 */
 	private static function parseId(string $url): string {
@@ -145,7 +142,7 @@ class RemoteFileCache implements CacheInterface {
 
     /**
      * Read filesystem cache files into class cache container
-	 * 
+	 *
 	 * @since 0.3.0
      *
      * @return void
@@ -186,18 +183,18 @@ class RemoteFileCache implements CacheInterface {
      * Purge expired cache items
      */
     protected function purge(): void {
-        array_filter($this->cache(), fn($f): bool => (($f->getMTime() + $this->defaultTTL) < time()) ? $f->unlink() : false);
+        array_filter($this->cache(), fn($f): bool => (($f->getMTime() + $this->defaultTTL) < time()) ? $f->remove() : false);
     }
 
     /**
 	 * Get or Add item to or from cache
-	 * 
+	 *
 	 * @param string $url	cache key
 	 * @param null|int $ttl	time to live for cache item if not default
-	 * 
+	 *
 	 * @return array|\Inane\Stdlib\Options cache item
-	 * 
-	 * @throws \Inane\Stdlib\Exception\RuntimeException 
+	 *
+	 * @throws \Inane\Stdlib\Exception\RuntimeException
 	 */
     protected function getCacheItem(string $url, ?int $ttl = null): array|Options {
         $uid = static::parseId($url);
@@ -250,7 +247,7 @@ class RemoteFileCache implements CacheInterface {
      */
     public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool {
         $ci = $this->getCacheItem($key);
-		
+
         if ($ci->file->write($value)) {
             if ($this->count() >= $this->maxCacheSize) $this->purge();
             return true;

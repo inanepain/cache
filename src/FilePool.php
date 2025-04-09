@@ -3,12 +3,13 @@
 /**
  * Inane: Cache
  *
- * Inane Cache
+ * Some simple caching tools implementing PSR-6 and PSR-16.
  *
  * PHP version 8.1
  *
- * @author Philip Michael Raab<peep@inane.co.za>
+ * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package Inane\Cache
+ * @category cache
  *
  * @license UNLICENSE
  * @license https://github.com/inanepain/cache/raw/develop/UNLICENSE UNLICENSE

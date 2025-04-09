@@ -1,4 +1,7 @@
 src/**/*.php filter=tagger
-README.md filter=tagger
+doc/*.adoc filter=tagger
+CHANGELOG.adoc filter=tagger
 CHANGELOG.md filter=tagger
+README.adoc filter=tagger
+README.md filter=tagger
 justfile filter=tagger
