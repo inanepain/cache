@@ -18,7 +18,8 @@
     },
     "keywords": [
         "inane",
-        "cache"
+        "cache",
+        "file"
     ],
     "autoload": {
         "psr-4": {
@@ -39,5 +40,27 @@
         "inanepain/stdlib": ">=0.1.5 || dev-master || dev-develop",
         "inanepain/file": ">= 0.2.1 || dev-master || dev-develop"
     },
-    "require-dev": {}
+    "require-dev": {},
+    "scripts": {
+        "build": [
+            "@build-changelog",
+            "@build-readme"
+        ],
+        "build-changelog": [
+            "del CHANGELOG.adoc",
+            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc",
+            "asciidoctor -b docbook CHANGELOG.adoc",
+            "del CHANGELOG.md",
+            "pandoc -f docbook -t markdown_strict CHANGELOG.xml -o CHANGELOG.md",
+            "del CHANGELOG.xml"
+        ],
+        "build-readme": [
+            "del README.adoc",
+            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc",
+            "asciidoctor -b docbook README.adoc",
+            "del README.md",
+            "pandoc -f docbook -t markdown_strict README.xml -o README.md",
+            "del README.xml"
+        ]
+    }
 }

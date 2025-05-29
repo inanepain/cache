@@ -1,0 +1,25 @@
+= Changelog: Cache
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:revnumber: 0.2.1
+:revdate: 2023-06-27
+:revremark: -dev
+// :version-label: Version
+:copyright: Unlicense
+:keywords: inane, cache, file
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: auto
+:sectanchors:
+
+Version: $Id$ ($Date$)
+
+== History
+
+// include::./release/0.0.0.adoc[leveloffset=+2]
+include::./release/0.2.1.adoc[leveloffset=+2]
+include::./release/0.2.0.adoc[leveloffset=+2]
+include::./release/0.1.0.adoc[leveloffset=+2]

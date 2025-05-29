@@ -22,7 +22,7 @@ Basic example, creating a `RemoteFileCache` object and using it to only
 return a file once. Using the defaults any subsequent requests, within a
 one day period for the same url, retrieves content from cache.
 
-**Basic RemoteFileCache Example**
+Basic RemoteFileCache Example
 
     $rfc = new \Inane\Cache\RemoteFileCache();
     $html = $rfc->get('http://example.com/files/example.html');
