@@ -5,17 +5,19 @@
  *
  * Some simple caching tools implementing PSR-6 and PSR-16.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package Inane\Cache
+ * @package inanepain\cache
  * @category cache
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/cache/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * @version $version
  */
 
 declare(strict_types=1);
