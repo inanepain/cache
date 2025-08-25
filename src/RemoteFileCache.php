@@ -17,7 +17,7 @@
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -48,8 +48,6 @@ use const null;
  * Remote File Cache
  *
  * Caches remote files after retrieving them.
- *
- * @package Inane\Cache
  *
  * @version 0.3.1
  */
