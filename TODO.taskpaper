@@ -1,6 +1,5 @@
-inanepain\cache:
-  Simple caching item and pools.
-  - basic implementation @version(0.1.0)
+inanepain/cache:
+Some simple caching tools implementing PSR-6 and PSR-16.
   Item:
     The Cache item class is used by all pools but the instances themselves are pool specific.
     - implement initial basic item @version(0.1.0)
