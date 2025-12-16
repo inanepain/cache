@@ -192,7 +192,7 @@ class RemoteFileCache implements CacheInterface {
      * @return \Inane\File\File[]
      */
     protected function getCacheFiles(): array {
-        return $this->path->getFiles('*.cache');
+        return $this->path->getFiles('*.cache') ?: [];
     }
     #endregion Utilities
 
