@@ -55,6 +55,7 @@
             "touch doc/readme/part/install.adoc"
         ],
         "build": [
+            "echo \"Library: inanepain/$(basename $(pwd))\"",
             "echo build: all...",
             "@build-changelog",
             "@build-readme",
