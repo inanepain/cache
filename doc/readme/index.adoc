@@ -1,14 +1,13 @@
-= README: inanepain/cache
+= inanepain/cache image:./icon.png[title=inanepain/cache,25]
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Some simple caching tools implementing PSR-6 and PSR-16.
 :keywords: inanepain, cache, psr-6, psr-16
+:homepage: https://github.com/inanepain/cache
 :copyright: Unlicense
-:homepage: https://git.cathedral.co.za:3000/inanepain/cache
 :revnumber: 0.1.0
 :revdate: 2025-12-31
 :experimental:
-:doctype: book
 :hide-uri-scheme:
 :icons: font
 :source-highlighter: highlight.js
@@ -20,7 +19,17 @@
 :pkg-name: cache
 :pkg-id: {pkg-vendor}/{pkg-name}
 
-version: $Id$ ($Date$)
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+:sectnums:
+
+<<<
+
+include::./part/install.adoc[leveloffset=+1]
+
+<<<
 
 Some simple caching tools implementing link:https://www.php-fig.org/psr/psr-6[`PSR-6`] and link:https://www.php-fig.org/psr/psr-16[`PSR-16`].
 

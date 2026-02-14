@@ -1,35 +1,45 @@
-= Inanepain: Cache
-// :firstname: Philip
-// :middlename: Michael
-// :lastname: Raab
+= inanepain/cache image:./icon.png[title=inanepain/cache,25]
 :author: Philip Michael Raab
-// :authorinitials: PMR
 :email: <philip@cathedral.co.za>
-:homepage: https://github.com/inanepain/cache
-:version-label: Release
-:revnumber: 0.1.0
-:revdate: 2025-12-31
-// :revremark: -initial
 :description: Some simple caching tools implementing PSR-6 and PSR-16.
 :keywords: inanepain, cache, psr-6, psr-16
+:homepage: https://github.com/inanepain/cache
 :copyright: Unlicense
+:revnumber: 0.1.0
+:revdate: 2025-12-31
 :experimental:
 :hide-uri-scheme:
-:table-stripes: even
 :icons: font
 :source-highlighter: highlight.js
-:sectnums: |,all|
-:toclevels: 5
-:sectnumlevels: 5
+:toc: left
 :sectanchors:
-// :sectlinks:
-:toc: auto
-:toc-title: Topic List
-// :table-frame: none
-// :table-grid: all
-// :table-stripes: all
+:idprefix: topic-
+:idseparator: -
+:pkg-vendor: inanepain
+:pkg-name: cache
+:pkg-id: {pkg-vendor}/{pkg-name}
 
-version: $Id$ ($Date$)
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+:sectnums:
+
+<<<
+
+:leveloffset: +1
+
+= Install
+
+.composer
+[source,shell]
+====
+composer require {pkg-id}
+====
+
+:leveloffset!:
+
+<<<
 
 Some simple caching tools implementing link:https://www.php-fig.org/psr/psr-6[`PSR-6`] and link:https://www.php-fig.org/psr/psr-16[`PSR-16`].
 
