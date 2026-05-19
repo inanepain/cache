@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\cache
@@ -26,8 +26,7 @@ namespace Inane\Cache;
 
 use Psr\Cache\{
     CacheItemInterface,
-    CacheItemPoolInterface
-};
+    CacheItemPoolInterface};
 
 /**
  * File Pool

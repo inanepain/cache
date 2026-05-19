@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author Philip Michael Raab<philip@cathedral.co.za>
  * @package inanepain\cache
@@ -24,18 +24,14 @@ declare(strict_types=1);
 
 namespace Inane\Cache;
 
+use Inane\File\{
+    Path};
 use Inane\Stdlib\Options;
 use Psr\SimpleCache\CacheInterface;
 use WeakReference;
-use Inane\File\{
-    File,
-    Path
-};
 
-use function array_filter;
 use function count;
 use function explode;
-use function is_null;
 use function md5;
 use function preg_match;
 use function str_ends_with;
@@ -146,7 +142,7 @@ class RemoteFileCache implements CacheInterface {
      * Convert a DateInterval to seconds
      *
      * @param \DateInterval $interval The interval to convert
-     * 
+     *
      * @return int The total number of seconds
      */
     private static function dateIntervalToSeconds(\DateInterval $interval): int {
