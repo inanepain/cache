@@ -38,7 +38,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.5",
         "psr/cache": ">= 3",
         "psr/simple-cache": ">= 3",
         "inanepain/stdlib": ">=0.1.5 || dev-master || dev-develop",
