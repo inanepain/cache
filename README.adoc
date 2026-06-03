@@ -1,4 +1,5 @@
 = inanepain/cache image:./icon.png[title=inanepain/cache,25]
+// tag::tagConfig[]
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Some simple caching tools implementing PSR-6 and PSR-16.
@@ -18,6 +19,7 @@
 :pkg-vendor: inanepain
 :pkg-name: cache
 :pkg-id: {pkg-vendor}/{pkg-name}
+// end::tagConfig[]
 
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 
