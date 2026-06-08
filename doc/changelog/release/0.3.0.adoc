@@ -2,5 +2,9 @@
 :revnumber: 0.3.0
 :revdate: 2026-06-08
 
+* new: Documentation.
+* new: PHPUnit Tests.
 * update: new internal cache map with individual TTL.
-* new: Documentation
+* fix: Try to create the cache directory.
+* fix: `delete`: return true if the cache file is invalid.
+* update: PHP8.5 improvments and other optimisations.

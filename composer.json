@@ -3,7 +3,7 @@
     "description": "Some simple caching tools implementing PSR-6 and PSR-16.",
     "type": "library",
     "license": "Unlicense",
-    "homepage": "https://git.cathedral.co.za:3000/inanepain/cache",
+    "homepage": "https://github.com/inanepain/cache",
     "readme": "README.adoc",
     "authors": [
         {
@@ -14,7 +14,7 @@
     ],
     "support": {
         "email": "philip@cathedral.co.za",
-        "issues": "https://git.cathedral.co.za:3000/inanepain/cache/issues"
+        "issues": "https://github.com/inanepain/cache/issues"
     },
     "keywords": [
         "inane",
@@ -41,8 +41,8 @@
         "php": ">=8.5",
         "psr/cache": ">= 3",
         "psr/simple-cache": ">= 3",
-        "inanepain/stdlib": ">=0.1.5 || dev-master || dev-develop",
-        "inanepain/file": ">= 0.2.1 || dev-master || dev-develop"
+        "inanepain/stdlib": ">=0.9.0 || dev-master || dev-develop",
+        "inanepain/file": ">= 0.3.0 || dev-master || dev-develop"
     },
     "require-dev": {},
     "scripts": {
