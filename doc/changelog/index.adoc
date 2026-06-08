@@ -1,10 +1,8 @@
-= Changelog: Cache
+= Changelog: inanepain/cache
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
-:revnumber: 0.2.1
-:revdate: 2023-06-27
-:revremark: -dev
-// :version-label: Version
+:revnumber: 0.3.0
+:revdate: 2026-06-08
 :copyright: Unlicense
 :keywords: inane, cache, file
 :experimental:
@@ -19,7 +17,7 @@ Version: $Id$ ($Date$)
 
 == History
 
-// include::./release/0.0.0.adoc[leveloffset=+2]
+include::./release/0.3.0.adoc[leveloffset=+2]
 include::./release/0.2.1.adoc[leveloffset=+2]
 include::./release/0.2.0.adoc[leveloffset=+2]
 include::./release/0.1.0.adoc[leveloffset=+2]

@@ -6,8 +6,8 @@
 :keywords: inanepain, cache, psr-6, psr-16
 :homepage: https://github.com/inanepain/cache
 :copyright: Unlicense
-:revnumber: 0.1.0
-:revdate: 2025-12-31
+:revnumber: 0.3.0
+:revdate: 2026-06-08
 :experimental:
 :hide-uri-scheme:
 :icons: font
@@ -43,20 +43,20 @@ composer require {pkg-id}
 
 <<<
 
-Some simple caching tools implementing link:https://www.php-fig.org/psr/psr-6[`PSR-6`] and link:https://www.php-fig.org/psr/psr-16[`PSR-16`].
+Some simple caching tools that implement link:https://www.php-fig.org/psr/psr-6[`PSR-6`] and link:https://www.php-fig.org/psr/psr-16[`PSR-16`].
 
 == Goals
 
-There is a lot to cover here so best I keep a bit of a record so as not to let bits fall between the cracks. As a bonus, a record will help keep me focused on the goal as well as track progress. +
+There is a lot to cover here, so I'll keep a bit of a record so as not to let bits fall between the cracks. As a bonus, a record will help keep me focused on the goal as well as track progress. +
 Man can I talk/type crap oir what?
 
 === Primary Goal
 
-To reduce remote access when using internet or other non-local sourced data.
+To reduce remote access when using internet or other non-local-sourced data.
 
 == Example
 
-Basic example, creating a `RemoteFileCache` object and using it to only return a file once. Using the defaults any subsequent requests, within a one day period for the same url, retrieves content from cache.
+Basic example, creating a `RemoteFileCache` object and using it to only return a file once. Using the defaults any subsequent requests, within a one-day period for the same url, retrieves content from cache.
 
 .Basic RemoteFileCache Example
 [source,php]
@@ -65,6 +65,6 @@ $rfc = new \Inane\Cache\RemoteFileCache();
 $html = $rfc->get('http://example.com/files/example.html');
 ----
 
-_"No way!"_, I hear you say. _"That is so simple!"_ +
+_"No way!"_ I hear you say. _"That is so simple!"_ +
 Yes, it is. But it is also very powerful. +
 The `RemoteFileCache` class implements the `PSR-6` and `PSR-16` interfaces so you can use it with any other library that implements those interfaces. It also has a few extra features that make it even more useful.

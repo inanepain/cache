@@ -1,16 +1,5 @@
-= 0.0.0 (2026 Xxx xx)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:revnumber: 0.0.0
+= 0.4.0-dev (2026 Xxx xx)
+:revnumber: 0.4.0-dev
 :revdate: 2026-xx-xx
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
+:revremark: -dev
 :sectanchors:
-
-* update: new internal cache map with individual TTL.

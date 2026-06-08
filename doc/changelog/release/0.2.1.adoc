@@ -1,16 +1,5 @@
 = 0.2.1 (2023 Jun 27)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
 :revnumber: 0.2.1
 :revdate: 2023-06-27
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * fix: `RemoteFileCache::get` undefined variable error

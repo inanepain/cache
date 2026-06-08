@@ -1,10 +1,8 @@
-= Changelog: Cache
+= Changelog: inanepain/cache
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
-:revnumber: 0.2.1
-:revdate: 2023-06-27
-:revremark: -dev
-// :version-label: Version
+:revnumber: 0.3.0
+:revdate: 2026-06-08
 :copyright: Unlicense
 :keywords: inane, cache, file
 :experimental:
@@ -19,23 +17,25 @@ Version: $Id$ ($Date$)
 
 == History
 
-// include::./release/0.0.0.adoc[leveloffset=+2]
+:leveloffset: +2
+
+= 0.3.0 (2026 Jun 08)
+:revnumber: 0.3.0
+:revdate: 2026-06-08
+
+* new: Documentation.
+* new: PHPUnit Tests.
+* update: new internal cache map with individual TTL.
+* fix: Try to create the cache directory.
+* fix: `delete`: return true if the cache file is invalid.
+* update: PHP8.5 improvments and other optimisations.
+
+:leveloffset!:
 :leveloffset: +2
 
 = 0.2.1 (2023 Jun 27)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
 :revnumber: 0.2.1
 :revdate: 2023-06-27
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * fix: `RemoteFileCache::get` undefined variable error
 
@@ -43,19 +43,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.2.0 (2023 Feb 02)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
 :revnumber: 0.2.0
 :revdate: 2023-02-02
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * new: `RemoteFileCache` use `\Inane\File\Path` for cache location
 
@@ -63,19 +52,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.1.0 (2022 Sep 26)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
 :revnumber: 0.1.0
 :revdate: 2022-09-26
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * initial
 

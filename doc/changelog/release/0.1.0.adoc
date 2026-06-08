@@ -1,16 +1,5 @@
 = 0.1.0 (2022 Sep 26)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
 :revnumber: 0.1.0
 :revdate: 2022-09-26
-:copyright: Unlicense
-:keywords: inane, cache, file
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: auto
-:sectanchors:
 
 * initial
