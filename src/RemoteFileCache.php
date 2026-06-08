@@ -10,28 +10,32 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\cache
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\cache
  * @category cache
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Cache;
 
+use DateInterval;
 use Inane\File\{
+    File,
     Path};
+use Inane\Stdlib\Exception\RuntimeException;
 use Inane\Stdlib\Options;
 use Psr\SimpleCache\CacheInterface;
 use WeakReference;
 
 use function count;
 use function explode;
+use function file_get_contents;
 use function md5;
 use function preg_match;
 use function str_ends_with;
@@ -45,7 +49,7 @@ use const null;
  *
  * Caches remote files after retrieving them.
  *
- * @todo: version bump
+ * @todo    : version bump
  * @version 0.3.1
  */
 class RemoteFileCache implements CacheInterface {
@@ -53,7 +57,7 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Weak Instance Reference
      *
-     * @var \WeakReference
+     * @var WeakReference
      */
     private WeakReference $instance;
 
@@ -64,12 +68,12 @@ class RemoteFileCache implements CacheInterface {
      *
      * @var int
      */
-    private int $maxCacheSize = 10;
+    private int $maxCacheSize = 100_000_000;
 
     /**
      * Cache Items
      *
-     * @var \Inane\Stdlib\Options
+     * @var Options
      */
     private Options $cacheItems;
 
@@ -79,6 +83,20 @@ class RemoteFileCache implements CacheInterface {
      * @var \Inane\File\Path
      */
     private Path $path;
+
+    /**
+     * Cache Size
+     *
+     * Returns the total number of items in the cache.
+     *
+     * @return int The count of cache items.
+     *
+     * @throws \Exception If unable to access cache items.
+     */
+    public int $cacheSize {
+        get => $this->cacheItems->count();
+    }
+
     #endregion Properties
 
     // CONSTRUCTOR
@@ -87,8 +105,8 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Remote File Cache Constructor
      *
-     * @param string $cachePath cache location (data/cache)
-     * @param int $defaultTTL duration items may remain in cache (86400, 1 day)
+     * @param string $cachePath  cache location (data/cache)
+     * @param int    $defaultTTL duration items may remain in cache (86400, 1 day)
      *
      * @return void
      */
@@ -98,7 +116,7 @@ class RemoteFileCache implements CacheInterface {
          *
          * @var string cache location
          */
-        private string $cachePath = 'data/cache',
+        string               $cachePath = 'data/cache',
 
         /**
          * How long to keep files in cache
@@ -108,21 +126,19 @@ class RemoteFileCache implements CacheInterface {
          *
          * @var int seconds
          */
-        private int $defaultTTL = 86400,
+        private readonly int $defaultTTL = 86_400,
     ) {
         $this->instance = WeakReference::create($this);
         $this->cacheItems = new Options();
-        $this->path = new Path($cachePath);
 
-        if (str_ends_with($cachePath, '/') || str_ends_with($cachePath, '\\'))
-            $cachePath = substr($cachePath, 0, -1);
+        $this->path = new Path((str_ends_with($cachePath, '/') || str_ends_with($cachePath, '\\')) ? substr($cachePath, 0, -1) : $cachePath);
+        $this->path->makePath(true);
 
         $this->loadCache();
-        // $cp = explode('\\', $cachePath);
-        // $this->cachePath = implode(DIRECTORY_SEPARATOR, $cp);
     }
 
     #region Utilities
+
     /**
      * Get cache key for supplied url
      *
@@ -141,16 +157,16 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Convert a DateInterval to seconds
      *
-     * @param \DateInterval $interval The interval to convert
+     * @param DateInterval $interval The interval to convert
      *
      * @return int The total number of seconds
      */
-    private static function dateIntervalToSeconds(\DateInterval $interval): int {
+    private static function dateIntervalToSeconds(DateInterval $interval): int {
         $seconds = $interval->s;
-        $seconds += $interval->i * 60; // minutes to seconds
-        $seconds += $interval->h * 3600; // hours to seconds
-        $seconds += $interval->d * 86400; // days to seconds
-        $seconds += $interval->m * 30 * 86400; // months to seconds (assuming 30 days per month)
+        $seconds += $interval->i * 60;          // minutes to seconds
+        $seconds += $interval->h * 3600;        // hours to seconds
+        $seconds += $interval->d * 86400;       // days to seconds
+        $seconds += $interval->m * 30 * 86400;  // months to seconds (assuming 30 days per month)
         $seconds += $interval->y * 365 * 86400; // years to seconds (assuming 365 days per year)
 
         return $interval->invert ? -$seconds : $seconds;
@@ -167,16 +183,19 @@ class RemoteFileCache implements CacheInterface {
      * @return void
      */
     protected function loadCache(): void {
-        foreach ($this->getCacheFiles() as $file) {
+        foreach($this->getCacheFiles() as $file) {
             $meta = explode('-', $file->getBasename('.cache'));
             if (count($meta) == 1) $meta[] = $this->defaultTTL;
-            [$uid, $ttl] = $meta;
+            [
+                $uid,
+                $ttl,
+            ] = $meta;
             $ttl = (int)$ttl;
 
             if (($file->getMTime() + $ttl) < time()) $file->remove();
             else $this->cacheItems->set($uid, [
-                'file' => $file,
-                'ttl' => $ttl,
+                'file'  => $file,
+                'ttl'   => $ttl,
                 'cache' => $this->instance,
             ]);
         }
@@ -185,7 +204,7 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Returns the cached files
      *
-     * @return \Inane\File\File[]
+     * @return File[]
      */
     protected function getCacheFiles(): array {
         return $this->path->getFiles('*.cache') ?: [];
@@ -193,19 +212,23 @@ class RemoteFileCache implements CacheInterface {
     #endregion Utilities
 
     /**
-     * Returns the cache size
+     * Determines if the cache size limit has been reached.
      *
-     * @return int
+     * @return bool True if the current number of cache items equals or exceeds the maximum cache size; false otherwise.
+     *
+     * @throws \RuntimeException if the internal cache item count or size cannot be determined due to unexpected conditions.
      */
-    protected function count(): int {
-        return $this->cacheItems->count();
+    protected function isCacheFull(): bool {
+        return $this->cacheSize >= $this->maxCacheSize;
     }
 
     /**
      * Purge expired cache items
+     *
+     * @throws RuntimeException
      */
     protected function purge(): void {
-        foreach ($this->cacheItems as $uid => $item) {
+        foreach($this->cacheItems as $uid => $item) {
             if (($item->file->getMTime() + $item->ttl) < time()) {
                 $item->file->remove();
                 $this->cacheItems->unset($uid);
@@ -214,24 +237,30 @@ class RemoteFileCache implements CacheInterface {
     }
 
     /**
-     * Get or Add item to or from cache
+     * Get or Add item to or from a cache
      *
-     * @param string $url	cache key
-     * @param null|int $ttl	time to live for cache item if not default
+     * @param string                $url cache key
+     * @param null|int|DateInterval $ttl time to live for cache item if not default
      *
-     * @return array|\Inane\Stdlib\Options cache item
+     * @return array|Options cache item
      *
-     * @throws \Inane\Stdlib\Exception\RuntimeException
+     * Hint: Returned object exposes the following properties
+     * - file: \Inane\File\File
+     * - ttl: int
+     * - cache: \WeakReference
+     *
+     * @phpstan-return object{file:File, ttl:int, cache:WeakReference}
+     * @psalm-return object{file:File, ttl:int, cache:WeakReference}
      */
-    protected function getCacheItem(string $url, ?int $ttl = null): array|Options {
+    protected function getCacheItem(string $url, null|int|DateInterval $ttl = null): array|Options {
         $uid = static::parseId($url);
         if (!$this->cacheItems->has($uid)) {
-            if (!$ttl) $ttl = $this->defaultTTL;
-            elseif ($ttl instanceof \DateInterval) $ttl = static::dateIntervalToSeconds($ttl);
+            if ($ttl instanceof DateInterval) $ttl = static::dateIntervalToSeconds($ttl);
+            elseif (!$ttl) $ttl = $this->defaultTTL;
 
             $this->cacheItems->set($uid, [
-                'file' => $this->path->getFile("$uid-$ttl.cache"),
-                'ttl' => $ttl,
+                'file'  => $this->path->getFile("$uid-$ttl.cache"),
+                'ttl'   => $ttl,
                 'cache' => $this->instance,
             ]);
         }
@@ -255,7 +284,7 @@ class RemoteFileCache implements CacheInterface {
     public function get(string $key, mixed $default = null): mixed {
         $ci = $this->getCacheItem($key);
 
-        if (!$ci->file->isValid() || ($ci->file->isValid() && (($ci->file->getMTime() + $ci->ttl) < time()) || $ci->file->getSize() < 10))
+        if (!$ci->file->isValid() || (($ci->file->isValid() && (($ci->file->getMTime() + $ci->ttl) < time())) || $ci->file->getSize() < 10))
             $this->set($key, file_get_contents($key));
 
         return $ci->file->read(true);
@@ -264,24 +293,23 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
      *
-     * @param string                 $key   The key of the item to store.
-     * @param mixed                  $value The value of the item to store, must be serializable.
-     * @param null|int|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
+     * @param string                $key    The key of the item to store.
+     * @param mixed                 $value  The value of the item to store, must be serializable.
+     * @param null|int|DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
      *                                      the driver supports TTL then the library may set a default value
      *                                      for it or let the driver take care of that.
      *
      * @return bool True on success and false on failure.
-     *
-     * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
      */
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool {
+    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool {
         if (!$ttl) $ttl = $this->defaultTTL;
-        elseif ($ttl instanceof \DateInterval) $ttl = static::dateIntervalToSeconds($ttl);
+        elseif ($ttl instanceof DateInterval) $ttl = static::dateIntervalToSeconds($ttl);
 
         $ci = $this->getCacheItem($key, $ttl);
 
         if ($ci->file->write($value)) {
-            if ($this->count() >= $this->maxCacheSize) $this->purge();
+            if ($this->isCacheFull()) $this->purge();
+
             return true;
         }
 
@@ -296,16 +324,16 @@ class RemoteFileCache implements CacheInterface {
      * @return bool True if the item was successfully removed. False if there was an error.
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is not a legal value.
+     * @throws RuntimeException
      */
     public function delete(string $key): bool {
         $ci = $this->getCacheItem($key);
 
         $this->cacheItems->unset(static::parseId($key));
 
-        if ($ci->file->isValid()) if ($ci->file->remove())
-            return true;
+        if ($ci->file->isValid()) $ci->file->remove();
 
-        return false;
+        return !$ci->file->isValid();
     }
 
     /**
@@ -314,7 +342,7 @@ class RemoteFileCache implements CacheInterface {
      * @return bool Returns true on success, false on failure.
      */
     public function clear(): bool {
-        foreach ($this->cacheItems as $uid => $item) {
+        foreach($this->cacheItems as $uid => $item) {
             $item->file->remove();
             $this->cacheItems->unset($uid);
         }
@@ -335,7 +363,7 @@ class RemoteFileCache implements CacheInterface {
     public function getMultiple(iterable $keys, mixed $default = null): iterable {
         $cacheItems = [];
 
-        foreach ($keys as $u)
+        foreach($keys as $u)
             $cacheItems[$u] = $this->get($u);
 
         return $cacheItems;
@@ -344,8 +372,8 @@ class RemoteFileCache implements CacheInterface {
     /**
      * Persists a set of key => value pairs in the cache, with an optional TTL.
      *
-     * @param iterable               $values A list of key => value pairs for a multiple-set operation.
-     * @param null|int|\DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
+     * @param iterable              $values  A list of key => value pairs for a multiple-set operation.
+     * @param null|int|DateInterval $ttl     Optional. The TTL value of this item. If no value is sent and
      *                                       the driver supports TTL then the library may set a default value
      *                                       for it or let the driver take care of that.
      *
@@ -353,8 +381,8 @@ class RemoteFileCache implements CacheInterface {
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is neither a legal value, Traversable nor array.
      */
-    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool {
-        foreach ($values as $key => $value) $this->set($key, $value, $ttl);
+    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool {
+        foreach($values as $key => $value) $this->set($key, $value, $ttl);
 
         return true;
     }
@@ -369,7 +397,7 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is neither a legal value, Traversable nor array.
      */
     public function deleteMultiple(iterable $keys): bool {
-        foreach ($keys as $u)
+        foreach($keys as $u)
             $this->delete($u);
 
         return true;
@@ -390,6 +418,6 @@ class RemoteFileCache implements CacheInterface {
      * @throws \Psr\SimpleCache\InvalidArgumentException if the $key string is neither a legal value.
      */
     public function has(string $key): bool {
-        return $this->getCacheItem($key)->file->isValid();
+        return $this->getCacheItem($key)?->file?->isValid() ?? false;
     }
 }
