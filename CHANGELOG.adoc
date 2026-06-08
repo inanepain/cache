@@ -28,7 +28,7 @@ Version: $Id$ ($Date$)
 * update: new internal cache map with individual TTL.
 * fix: Try to create the cache directory.
 * fix: `delete`: return true if the cache file is invalid.
-* update: PHP8.5 improvments and other optimisations.
+* update: PHP8.5 improvements and other optimisations.
 
 :leveloffset!:
 :leveloffset: +2
