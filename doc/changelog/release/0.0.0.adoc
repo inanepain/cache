@@ -1,8 +1,8 @@
-= 0.0.0 (2025 Xxx xx)
+= 0.0.0 (2026 Xxx xx)
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :revnumber: 0.0.0
-:revdate: 2025-xx-xx
+:revdate: 2026-xx-xx
 :copyright: Unlicense
 :keywords: inane, cache, file
 :experimental:
@@ -13,4 +13,4 @@
 :toc: auto
 :sectanchors:
 
-* update: new internal cache map with individual  TTL.
+* update: new internal cache map with individual TTL.
