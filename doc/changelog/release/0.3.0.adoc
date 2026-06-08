@@ -1,0 +1,6 @@
+= 0.3.0 (2026 Jun 08)
+:revnumber: 0.3.0
+:revdate: 2026-06-08
+
+* update: new internal cache map with individual TTL.
+* new: Documentation
