@@ -30,6 +30,11 @@
             "Inane\\Cache\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Inane\\Cache\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "preferred-install": "dist",
         "optimize-autoloader": true,
