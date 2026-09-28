@@ -41,13 +41,13 @@ php-doc clear="all":
 		echo "\tCleaning: cache..."
 		rm -fr .phpdoc
 	fi
-	if [ -d part/api ] && [[ "{{clear}}" = "all" || "{{clear}}" = "html" ]]; then
+	if [ -d phpdoc ] && [[ "{{clear}}" = "all" || "{{clear}}" = "html" ]]; then
 		echo "\tCleaning: html..."
-		rm -fr part/api
+		rm -fr phpdoc
 	fi
 
-	mkdir -p part/api
-	phpdoc -d src -t part/api --title="{{project}}" --defaultpackagename="Inane"
+	mkdir -p phpdoc
+	phpdoc -d src -t phpdoc --title="{{project}}" --defaultpackagename="Inane"
 
 #*********************************************
 #### DOCUMENTATION: README
