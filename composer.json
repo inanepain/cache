@@ -73,28 +73,20 @@
         "build-changelog": [
             "echo building: changelog...",
             "rm -f CHANGELOG.adoc",
-            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc",
-            "asciidoctor -b docbook CHANGELOG.adoc",
-            "rm -f CHANGELOG.xml"
+            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
         ],
         "build-changelog-win": [
             "del CHANGELOG.adoc",
-            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc",
-            "asciidoctor -b docbook CHANGELOG.adoc",
-            "del CHANGELOG.xml"
+            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
         ],
         "build-readme": [
             "echo building: readme...",
             "rm -f README.adoc",
-            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc",
-            "asciidoctor -b docbook README.adoc",
-            "rm -f README.xml"
+            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
         ],
         "build-readme-win": [
             "del README.adoc",
-            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc",
-            "asciidoctor -b docbook README.adoc",
-            "del README.xml"
+            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
         ]
     }
 }
